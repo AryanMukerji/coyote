@@ -6,7 +6,7 @@ app.secret_key = "hjtTO6DZulWQyqSYOfuyjXkLYOTVhQBfBkAmUD6UNATf42hX2pSJhlHw1OpWr4
 
 @app.route('/devices', methods=['POST'])
 def devices():
-    content = request.json()
+    content = request.json
     uid=content['uid']
     #funcion of docker data return
     print(uid)
@@ -28,9 +28,6 @@ def devices():
             "name": "Aquarium"
 
         },
-
-
-
 
         ]
     
