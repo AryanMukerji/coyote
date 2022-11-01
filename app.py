@@ -4,8 +4,12 @@ app = Flask(__name__)
 app.secret_key = "hjtTO6DZulWQyqSYOfuyjXkLYOTVhQBfBkAmUD6UNATf42hX2pSJhlHw1OpWr4KL"
 
 
-@app.route('/devices', methods=['GET','POST'])
+@app.route('/devices', methods=['POST'])
 def devices():
+    content = request.json()
+    uid=content['uid']
+    #funcion of docker data return
+    print(uid)
     data= [
         {
             "id": 1,
@@ -32,8 +36,10 @@ def devices():
     
     return jsonify(data)
 
-@app.route('/devices/<id>', methods = ['GET','POST'])
+@app.route('/devices/<id>', methods = ['POST'])
 def iddata(id):
+    #docker funtion here
+
     data = {
         "id":id,
         "Name": "Device " + id,
@@ -43,9 +49,9 @@ def iddata(id):
 
     return jsonify(data)
 
-@app.route('/devices/<id>/<cmd>', methods = ['GET','POST'])
+@app.route('/devices/<id>/<cmd>', methods = ['POST'])
 def cmddata(id,cmd):
-
+    #docker funtion here
     data = {
         "id":id,
         "Name": "Device " + id,
