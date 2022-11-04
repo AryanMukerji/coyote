@@ -1,6 +1,5 @@
 import subprocess
 import docker
-#import os
 
 client = docker.from_env()
 
