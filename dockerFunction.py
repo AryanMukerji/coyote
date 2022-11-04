@@ -1,6 +1,6 @@
 import subprocess
 import docker
-import os
+#import os
 
 client = docker.from_env()
 
@@ -13,4 +13,4 @@ def createContainers(UID):
     portNumber = subprocess.getoutput(cmd)
 
     #print(portNumber.split(':')[1].strip())
-    return portNumber.split(':')[1].strip()
+    return int(portNumber.split(':')[1].strip())

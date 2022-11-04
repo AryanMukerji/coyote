@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, g,json,session,jsonify
-import random
+from dockerFunction import createContainers
 
 app = Flask(__name__)
 app.secret_key = "hjtTO6DZulWQyqSYOfuyjXkLYOTVhQBfBkAmUD6UNATf42hX2pSJhlHw1OpWr4KL"
@@ -9,11 +9,11 @@ app.secret_key = "hjtTO6DZulWQyqSYOfuyjXkLYOTVhQBfBkAmUD6UNATf42hX2pSJhlHw1OpWr4
 def devices():
     content = request.json
     uid=content['uid']
-    #funcion of docker data return
+    port=createContainers(uid)
     #print(uid)
     data= {
         'uid':uid,
-        'port':random.randrange(2000,6000)
+        'port':port
         }
     
     return jsonify(data)
