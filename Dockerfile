@@ -35,4 +35,4 @@ EXPOSE 1883
 
 # Start the MQTT service at container creation
 ENTRYPOINT service mosquitto start && /bin/bash && \
-           python3 dbMQTT.py
+           python3 dbMQTT.py&
