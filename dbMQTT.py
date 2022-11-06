@@ -1,5 +1,5 @@
 from paho.mqtt import client as mqtt_client
-import sqlite3 , json ,time
+import sqlite3, json, time
 
 broker = '127.0.0.1'
 port = 1883
@@ -9,7 +9,6 @@ client_id = 'dbMQTT'
 
 con = sqlite3.connect('database.db')
 con.execute('CREATE TABLE IF NOT EXISTS mqttdevices ( clientid TEXT PRIMARY KEY , controltopic TEXT )')
-
 
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
@@ -22,7 +21,6 @@ def connect_mqtt():
     client.on_connect = on_connect
     client.connect(broker, port)
     return client
-
 
 def publish(client,msg):
     result = client.publish(topicsend, msg)
@@ -77,7 +75,6 @@ def run():
     subscribe(client)
     time.sleep(0.1)
     client.loop_forever()
-
 
 if __name__ == '__main__':
     run()
