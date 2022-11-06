@@ -1,5 +1,5 @@
 from paho.mqtt import client as mqtt_client
-import sqlite3 , json
+import sqlite3 , json ,time
 
 broker = '127.0.0.1'
 port = 1883
@@ -75,6 +75,7 @@ def subscribe(client: mqtt_client):
 def run():
     client = connect_mqtt()
     subscribe(client)
+    time.sleep(0.1)
     client.loop_forever()
 
 
