@@ -73,7 +73,7 @@ def subscribe(client: mqtt_client):
 def run():
     client = connect_mqtt()
     subscribe(client)
-    time.sleep(0.1)
+#    time.sleep(0.1)
     client.loop_forever()
 
 if __name__ == '__main__':
