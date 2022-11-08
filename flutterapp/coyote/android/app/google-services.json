@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "659004097355",
+    "project_id": "coyote-59167",
+    "storage_bucket": "coyote-59167.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659004097355:android:8012ddafadd355fcc71ece",
+        "android_client_info": {
+          "package_name": "com.example.coyote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "659004097355-ku1ojr53ocl3j2d70592i6gir6a952r6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.coyote",
+            "certificate_hash": "9623f89a5838e2ef4a589f3eb75409dd537c4fcd"
+          }
+        },
+        {
+          "client_id": "659004097355-d6munbbd17ge2meu93ujlnh52ets24df.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDxHZo0GfnrzJAfovj8Q1ojFuMNkdESfI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "659004097355-d6munbbd17ge2meu93ujlnh52ets24df.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
