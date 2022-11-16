@@ -46,6 +46,7 @@ import 'package:coyote/display_port.dart';
 import 'package:coyote/get_devices.dart';
 import 'package:coyote/get_port.dart';
 import 'package:coyote/homepageforgoogle.dart';
+import 'package:coyote/login_page.dart';
 import 'package:coyote/widget_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
     'configure': (context) =>  Configure(),
     'homepage': (context) =>  HomePage(),
     'getport': (context) =>  GetPort(),
+    'loginpage': (context) =>  LoginPage(),
   },
      home: AuthService().handleAuthState(),
     );

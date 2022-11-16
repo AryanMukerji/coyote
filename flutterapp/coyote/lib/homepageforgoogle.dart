@@ -66,6 +66,7 @@ class _HomePageState extends State<HomePage> {
       child: GestureDetector(
         onTap: () {
           AuthService().signOut();
+          Navigator.pushNamed(context, 'loginpage');
         },
         child: Icon(
           Icons.logout_outlined,

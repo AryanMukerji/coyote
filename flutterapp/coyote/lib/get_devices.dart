@@ -5,11 +5,12 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coyote/ask_to_proceed.dart';
+import 'package:coyote/get_port.dart';
 
 late List globaldevicelist=[];
  Map<String, String> displaydevicesonscreen = mapfordevices;
 List listofseleceddevices=[];
-List<String> listofdevices = [];
+
 
 // maptostring(){
 //   for(int i=0; i<displaydevicesonscreen.length; i++){
@@ -54,6 +55,7 @@ class _GetDevicesState extends State<GetDevices> {
       child: GestureDetector(
         onTap: () {
           AuthService().signOut();
+          Navigator.pushNamed(context, 'loginpage');
         },
         child: Icon(
           Icons.logout_outlined,

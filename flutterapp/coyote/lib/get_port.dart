@@ -9,7 +9,8 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:coyote/MQTTManager.dart';
 
 late var receiveddevicesjson;
-late Map<String, String> mapfordevices = {"x": "y"};
+Map<String, String> mapfordevices = {"x": "y"};
+List<String> listofdevices = [];
 
 // int newnumber=0;
 // int iffolderexistsnumber=0;
@@ -64,7 +65,7 @@ class _GetPortState extends State<GetPort> {
   final String tosenddata = "devices/request";
   final String toreceivedata = "devices/response";
   final String datatosend="getdevices";
-   List<String> listofdevices = ['D1'];
+  //  List<String> listofdevices = ['D1'];
 
       
   Widget _title() {
@@ -95,6 +96,7 @@ class _GetPortState extends State<GetPort> {
       child: GestureDetector(
         onTap: () {
           AuthService().signOut();
+          Navigator.pushNamed(context, 'loginpage');
         },
         child: Icon(
           Icons.logout_outlined,
@@ -139,6 +141,7 @@ class _GetPortState extends State<GetPort> {
                  ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Color.fromARGB(255, 238, 48, 83),),
                 onPressed: () {
+                  functiontosendmessage();
                 Navigator.pushNamed(context, 'getdevices');
               }, child: Text('Proceed', style: TextStyle(color: Colors.white),)),
               ],
@@ -222,9 +225,9 @@ class _GetPortState extends State<GetPort> {
 
 
 
-  functiontosendmessage() {
-    mqttClientManager.publishMessage( tosenddata, datatosend);
-    // setupUpdatesListener();
+  functiontosendmessage() async {
+     mqttClientManager.publishMessage( tosenddata, datatosend);
+     //setupUpdatesListener();
   }
 
     Future<void> setupMqttClient() async {
@@ -248,6 +251,7 @@ class _GetPortState extends State<GetPort> {
   }
 
   void DecodeJson(){
+    print("reached decode json function in getport page");
     List<dynamic> list = json.decode(receiveddevicesjson);
     for(int i=0; i<list.length; i++){
     String x=list[i]['devid'];
@@ -259,6 +263,11 @@ class _GetPortState extends State<GetPort> {
     }
     mapfordevices.remove("x");
     print(mapfordevices);
+
+     print("will print list of devices");
+    for(int i=0; i<listofdevices.length; i++){
+      print("list of devices: ${listofdevices[i]}");
+    }
     // abcd.add(mapfordevices.keys);
     // print("list: $abcd");
     // print("list[0]: ${abcd[0]}");
