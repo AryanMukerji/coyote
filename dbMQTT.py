@@ -52,20 +52,27 @@ def subscribe(client: mqtt_client):
 
         elif msg.payload.decode().startswith('adddevice'):
             id,topic=msg.payload.decode().split(':')[1],msg.payload.decode().split(':')[2]
-            con = sqlite3.connect('database.db')
-            cur = con.cursor()
-            cur.execute('INSERT INTO mqttdevices (clientid,controltopic) VALUES (?,?)',(id,topic))
-            con.commit()
-            con.close()
+            try:
+                con = sqlite3.connect('database.db')
+                cur = con.cursor()
+                cur.execute('INSERT INTO mqttdevices (clientid,controltopic) VALUES (?,?)',(id,topic))
+                con.commit()
+                con.close()
+            except:
+                pass
         
         elif msg.payload.decode().startswith('rmdevice'):
-            con = sqlite3.connect('database.db')
             id,topic=msg.payload.decode().split(':')[1],msg.payload.decode().split(':')[2]
-            con = sqlite3.connect('database.db')
-            cur = con.cursor()
-            cur.execute('DELETE FROM mqttdevices WHERE clientid=?',(id,))
-            con.commit()
-            con.close()
+            try:
+                con = sqlite3.connect('database.db')
+                id,topic=msg.payload.decode().split(':')[1],msg.payload.decode().split(':')[2]
+                con = sqlite3.connect('database.db')
+                cur = con.cursor()
+                cur.execute('DELETE FROM mqttdevices WHERE clientid=?',(id,))
+                con.commit()
+                con.close()
+            except:
+                pass
 
     client.subscribe(topicget)
     client.on_message = on_message
