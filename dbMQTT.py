@@ -1,11 +1,12 @@
 from paho.mqtt import client as mqtt_client
-import sqlite3, json, time
+import sqlite3, json, schedule
 
 broker = '127.0.0.1'
 port = 1883
 topicget = "devices/request"
 topicsend = "devices/response"
 client_id = 'dbMQTT'
+
 
 con = sqlite3.connect('database.db')
 con.execute('CREATE TABLE IF NOT EXISTS mqttdevices ( clientid TEXT PRIMARY KEY , controltopic TEXT )')
@@ -33,53 +34,70 @@ def publish(client,msg):
 def subscribe(client: mqtt_client):
 
     def on_message(client, userdata, msg):
+
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-
-        if msg.payload.decode().startswith('getdevices'):
-            con = sqlite3.connect('database.db')
-            cur = con.cursor()
-            cur.execute("SELECT * FROM mqttdevices")
-            rows = cur.fetchall()
-            data=[]
-            for row in rows:
-                dev={
-                'devid':row[0],
-                'devtopic':row[1]
-                }
-                data.append(dev)
-            publish(client,json.dumps(data))
-            con.close()
-
-        elif msg.payload.decode().startswith('adddevice'):
-            id,topic=msg.payload.decode().split(':')[1],msg.payload.decode().split(':')[2]
-            try:
+        if msg.topic=="devices/request":
+            if msg.payload.decode().startswith('getdevices'):
                 con = sqlite3.connect('database.db')
                 cur = con.cursor()
-                cur.execute('INSERT INTO mqttdevices (clientid,controltopic) VALUES (?,?)',(id,topic))
-                con.commit()
+                cur.execute("SELECT * FROM mqttdevices")
+                rows = cur.fetchall()
+                data=[]
+                for row in rows:
+                    dev={
+                    'devid':row[0],
+                    'devtopic':row[1]
+                    }
+                    data.append(dev)
+                publish(client,json.dumps(data))
                 con.close()
-            except:
-                pass
-        
-        elif msg.payload.decode().startswith('rmdevice'):
-            id,topic=msg.payload.decode().split(':')[1],msg.payload.decode().split(':')[2]
-            try:
-                con = sqlite3.connect('database.db')
+
+            elif msg.payload.decode().startswith('adddevice'):
                 id,topic=msg.payload.decode().split(':')[1],msg.payload.decode().split(':')[2]
-                con = sqlite3.connect('database.db')
-                cur = con.cursor()
-                cur.execute('DELETE FROM mqttdevices WHERE clientid=?',(id,))
-                con.commit()
-                con.close()
-            except:
-                pass
+                try:
+                    con = sqlite3.connect('database.db')
+                    cur = con.cursor()
+                    cur.execute('INSERT INTO mqttdevices (clientid,controltopic) VALUES (?,?)',(id,topic))
+                    con.commit()
+                    con.close()
+                except:
+                    pass
+            
+            elif msg.payload.decode().startswith('rmdevice'):
+                id,topic=msg.payload.decode().split(':')[1],msg.payload.decode().split(':')[2]
+                try:
+                    con = sqlite3.connect('database.db')
+                    id,topic=msg.payload.decode().split(':')[1],msg.payload.decode().split(':')[2]
+                    con = sqlite3.connect('database.db')
+                    cur = con.cursor()
+                    cur.execute('DELETE FROM mqttdevices WHERE clientid=?',(id,))
+                    con.commit()
+                    con.close()
+                except:
+                    pass
+
+        if msg.topic=="flows":
+            print("working")
+            jsondata=json.loads(msg.payload.decode())
+            time=jsondata['time']
+            time=time[10:15]
+            devices=jsondata['devices']
+            schedule.every().day.at(time,"Asia/Kolkata").do(timebasedjob,devices=devices)
+
+
 
     client.subscribe(topicget)
+    client.subscribe("flows")
     client.on_message = on_message
+
+def timebasedjob(devices,client: mqtt_client):
+    for k,v in devices:
+        client.publish(f"{k}/cmd",v)
 
 def run():
     client = connect_mqtt()
     subscribe(client)
+    schedule.run_pending()
 #    time.sleep(0.1)
     client.loop_forever()
 
