@@ -82,7 +82,7 @@ def subscribe(client: mqtt_client):
             time=jsondata['time']
             time=time[10:15]
             devices=jsondata['devices']
-            schedule.every().day.at(time,"Asia/Kolkata").do(timebasedjob,devices=devices)
+            schedule.every().day.at(time).do(timebasedjob,devices=devices)
 
 
 
