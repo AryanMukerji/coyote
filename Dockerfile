@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 
 # LABEL about the custom image
 LABEL maintainer="aryanmukerji@gmail.com"
-LABEL version="0.3"
+LABEL version="0.4"
 LABEL description="This is custom Docker Image for MQTT Server."
 
 # Disable Prompt During Packages Installation
@@ -15,10 +15,11 @@ WORKDIR /home
 # Update Ubuntu Software Repository
 RUN apt-get update
 
-# Install python3, pip3, paho-mqtt
+# Install python3, pip3, paho-mqtt, schedule
 RUN apt-get install -y python3 && \
         apt-get install -y python3-pip && \
-        pip3 install paho-mqtt
+        pip3 install paho-mqtt && \
+		pip install schedule
 
 # Install and setup MQTT client
 RUN apt-get install -y mosquitto mosquitto-clients && \
