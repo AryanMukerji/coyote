@@ -1,5 +1,6 @@
 from paho.mqtt import client as mqtt_client
 import sqlite3, json, schedule
+import time
 
 broker = '127.0.0.1'
 port = 1883
@@ -23,13 +24,13 @@ def connect_mqtt():
     client.connect(broker, port)
     return client
 
-def publish(client,msg):
-    result = client.publish(topicsend, msg)
+def publish(client,topic,msg):
+    result = client.publish(topic, msg)
     status = result[0]
     if status == 0:
-        print(f"Send `{msg}` to topic `{topicsend}`")
+        print(f"Send `{msg}` to topic `{topic}`")
     else:
-        print(f"Failed to send message to topic {topicsend}")
+        print(f"Failed to send message to topic {topic}")
 
 def subscribe(client: mqtt_client):
 
@@ -49,7 +50,7 @@ def subscribe(client: mqtt_client):
                     'devtopic':row[1]
                     }
                     data.append(dev)
-                publish(client,json.dumps(data))
+                publish(client,topicsend,json.dumps(data))
                 con.close()
 
             elif msg.payload.decode().startswith('adddevice'):
@@ -79,27 +80,34 @@ def subscribe(client: mqtt_client):
         if msg.topic=="flows":
             print("working")
             jsondata=json.loads(msg.payload.decode())
-            time=jsondata['time']
-            time=time[10:15]
+            timex=jsondata['time']
+            timex=timex[10:15]
             devices=jsondata['devices']
-            schedule.every().day.at(time).do(timebasedjob,devices=devices)
-
+            schedule.every().day.at(timex).do(timebasedjob,devices=devices,client=client)
+            print("Done schedulig")
+            n=schedule.idle_seconds()
+            print(n)
+            time.sleep(n)
+            schedule.run_all()
 
 
     client.subscribe(topicget)
     client.subscribe("flows")
     client.on_message = on_message
-
-def timebasedjob(devices,client: mqtt_client):
-    for k,v in devices:
-        client.publish(f"{k}/cmd",v)
-
-def run():
-    client = connect_mqtt()
-    subscribe(client)
     schedule.run_pending()
-#    time.sleep(0.1)
-    client.loop_forever()
 
-if __name__ == '__main__':
-    run()
+def timebasedjob(devices,client):
+    print("Running job")
+    print(devices)
+    for k in devices:
+        if devices[k]==True:
+            cmd="ON"
+        else:
+            cmd="OFF"
+        publish(client,f"{k}/cmd",cmd)
+
+
+client = connect_mqtt()
+subscribe(client)
+schedule.run_pending()
+client.loop_forever()
