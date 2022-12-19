@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 
 # LABEL about the custom image
 LABEL maintainer="aryanmukerji@gmail.com"
-LABEL version="0.4"
+LABEL version="0.5"
 LABEL description="This is custom Docker Image for MQTT Server."
 
 # Disable Prompt During Packages Installation
@@ -12,8 +12,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Default Working Directory
 WORKDIR /home
 
-# Update Ubuntu Software Repository
-RUN apt-get update
+# Update Ubuntu Software Repository and Install tzdata
+RUN apt-get update && \
+    apt-get install -yq tzdata && \
+    ln -fs /usr/share/zoneinfo/Asia/Calcutta /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
 
 # Install python3, pip3, paho-mqtt, schedule
 RUN apt-get install -y python3 && \
